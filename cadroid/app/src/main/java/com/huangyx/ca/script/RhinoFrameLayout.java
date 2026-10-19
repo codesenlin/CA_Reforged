@@ -1,9 +1,7 @@
 package com.huangyx.ca.script;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Outline;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -60,19 +58,13 @@ public class RhinoFrameLayout extends FrameLayout {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        try {
-            int r = mCallback.dispatchTouchEvent(ev, this);
-            if (r == RETURN_TRUE) {
-                return true;
-            } else if (r == RETURN_FALSE) {
-                return false;
-            }
-            return super.dispatchTouchEvent(ev);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            // 华为 EMUI 系统 bug：Editor$PositionListener.addSubscriber 返回 index=-1
-            // 触发路径: TextView.onTouchEvent -> Editor.onTouchUpEvent -> InsertionHandleView.show
+        int r = mCallback.dispatchTouchEvent(ev, this);
+        if (r == RETURN_TRUE) {
+            return true;
+        } else if (r == RETURN_FALSE) {
             return false;
         }
+        return super.dispatchTouchEvent(ev);
     }
 
     public void setRoundRectRadius(int radius) {
@@ -80,7 +72,6 @@ public class RhinoFrameLayout extends FrameLayout {
     }
 
     public void setRoundRectRadius(int radius, int direction) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
         if (radius <= 0) {
             setClipToOutline(false);
         } else {
@@ -89,10 +80,9 @@ public class RhinoFrameLayout extends FrameLayout {
         }
     }
 
-    @TargetApi(21)
 	private static class RadiusProvider extends ViewOutlineProvider {
-        float radius;
-        int direction;
+        final float radius;
+        final int direction;
 
         public RadiusProvider(float radius, int direction) {
             this.radius = radius;

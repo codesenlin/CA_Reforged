@@ -1,5 +1,7 @@
 package com.huangyx.ca;
 
+import com.huangyx.ca.gen.Secret;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -27,40 +29,12 @@ public class ScriptService extends Service {
     @Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
         if (sInstance != null) {
-            // 已有实例在运行
             return super.onStartCommand(intent, flags, startId);
         }
-        // 设置当前实例
         sInstance = new WeakReference<>(this);
         if (intent == null) {
             stopSelf();
             return super.onStartCommand(null, flags, startId);
-        }
-
-        // 获取当前版本号
-        int currentVersionCode;
-        try {
-            currentVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
-        } catch (Exception e) {
-            e.printStackTrace();
-            stopSelf();
-            return super.onStartCommand(intent, flags, startId);
-        }
-
-        // 检查版本号是否变化
-        Preference preference = Preference.getInstance(this);
-        int lastVersionCode = preference.getLastApkVersionCode();
-        if (lastVersionCode != 0 && lastVersionCode != currentVersionCode) {
-            // 删除快速更新文件
-            File baseDir = getDir("rhino", MODE_PRIVATE);
-            File coreJs = new File(baseDir, "core.js");
-            File coreSign = new File(baseDir, "core.sign");
-            if (coreJs.exists()) coreJs.delete();
-            if (coreSign.exists()) coreSign.delete();
-
-            // 更新持久化版本号
-            preference.setLastApkVersionCode(currentVersionCode);
-            // preference.save(); // 好像不需要调用保存，因为 set 方法已经 apply 了
         }
 
         Intent realIntent = intent.getParcelableExtra(Intent.EXTRA_INTENT);
@@ -70,7 +44,7 @@ public class ScriptService extends Service {
         }
         mLastIntent = realIntent;
         String sourceName = getString(R.string.app_name);
-        String src = preference.getDebugSource();
+        String src = Preference.getInstance(this).getDebugSource();
         if (ScriptInterface.ACTION_DEBUG_EXEC.equals(realIntent.getAction()) && !TextUtils.isEmpty(src)) {
             mManager = ScriptManager.createDebuggable(src);
         } else {
@@ -80,7 +54,7 @@ public class ScriptService extends Service {
             stopSelf();
         } else {
             mManager.setCacheDir(getCacheDir().getPath());
-            checkHotfix(); // 检查并应用“快速更新”
+            checkHotfix();
             if (ACTION_PREPARE.equals(intent.getAction())) {
                 mManager.prepareScript(this, sourceName, false);
             } else if (ACTION_RUN.equals(intent.getAction())) {
@@ -103,13 +77,12 @@ public class ScriptService extends Service {
 		return null;
 	}
 
-    // 获取“快速更新”的js文件并直接使用
     private void checkHotfix() {
         File base = getDir("rhino", MODE_PRIVATE);
         File core = new File(base, "core.js");
         if (!core.isFile()) return;
         File sign = new File(base, "core.sign");
-        mManager.setHotfix(core.getPath(), sign.getPath(), new byte[0], BuildConfig.VERSION_CODE);
+        mManager.setHotfix(core.getPath(), sign.getPath(), Secret.getVerifyKey(), BuildConfig.VERSION_CODE);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.huangyx.ca;
 
+import com.huangyx.ca.gen.Secret;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 
+import com.huangyx.ca.script.AnalyticsPlatform;
 import com.huangyx.ca.script.RhinoFrameLayout;
 import com.huangyx.ca.script.RhinoWebSocketClientHelper;
 import com.huangyx.ca.script.RhinoWebSocketServerHelper;
@@ -35,15 +38,15 @@ public class ScriptInterface {
     public static final String ACTION_URI_ACTION = "com.huangyx.ca.ACTION_URI_ACTION";
     public static final String ACTION_DEBUG_EXEC = "com.huangyx.ca.DEBUG_EXEC";
 
-    private ScriptManager mManager;
-	private Context mContext;
+    private final ScriptManager mManager;
+	private final Context mContext;
 	private SplashActivity mBindActivity;
 	private ScriptService mBindService;
-	private Thread mUiThread;
-	private Handler mUiHandler;
-	private Preference mPreference;
+	private final Thread mUiThread;
+	private final Handler mUiHandler;
+	private final Preference mPreference;
     private Bridge mBridge;
-    private CallbackProxy mCallbackProxy;
+    private final CallbackProxy mCallbackProxy;
     private boolean mOnlineMode = false;
     private String mOfflineReason = null;
 
@@ -206,11 +209,7 @@ public class ScriptInterface {
             mBindService.stopSelf();
         }
         if (mBindActivity != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mBindActivity.finishAndRemoveTask();
-            } else {
-                mBindActivity.finish();
-            }
+            mBindActivity.finishAndRemoveTask();
         }
     }
 
@@ -276,12 +275,12 @@ public class ScriptInterface {
 		return BuildConfig.VERSION_NAME;
 	}
 
-	public String getVerifyKey() {
-		return "";
+	public byte[] getVerifyKey() {
+		return Secret.getVerifyKey();
 	}
 
 	public String getGiteeFeedbackToken() {
-		return "";
+		return Secret.getGiteeFeedbackToken();
 	}
 
 	public RhinoWebView createWebView(RhinoWebView.Delegee delegee) {
@@ -289,12 +288,16 @@ public class ScriptInterface {
 	}
 
 	public String getGiteeClientId() {
-		return "";
+		return Secret.getGiteeClientId();
 	}
 
 	public String getGiteeClientSecret() {
-		return "";
+		return Secret.getGiteeClientSecret();
 	}
+
+    public AnalyticsPlatform getAnalyticsPlatform() {
+	    return AnalyticsPlatform.getInstance();
+    }
 
     public boolean isOnlineMode() {
         return mOnlineMode;

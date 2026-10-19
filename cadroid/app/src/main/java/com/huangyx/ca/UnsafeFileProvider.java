@@ -7,6 +7,7 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;
@@ -18,7 +19,8 @@ import java.util.Set;
 
 public class UnsafeFileProvider extends ContentProvider {
     private static final Set<String> mFiles = new HashSet<>();
-    private static final String authority = "com.huangyx.ca.UnsafeFileProvider";
+    // 跟随 applicationId（测试版是 com.huangyx.ca.test），与 Manifest 里的 ${applicationId} 保持一致
+    private static final String authority = BuildConfig.APPLICATION_ID + ".UnsafeFileProvider";
 
     @Override
     public boolean onCreate() {
@@ -53,7 +55,7 @@ public class UnsafeFileProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         File file = getFileForUri(uri);
         if (projection == null) {
             projection = new String[] {
@@ -85,7 +87,7 @@ public class UnsafeFileProvider extends ContentProvider {
     }
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         File file = getFileForUri(uri);
         int lastDot = file.getName().lastIndexOf('.');
         if (lastDot >= 0) {
@@ -99,24 +101,24 @@ public class UnsafeFileProvider extends ContentProvider {
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues contentValues) {
+    public Uri insert(@NonNull Uri uri, ContentValues contentValues) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public int delete(Uri uri, String s, String[] strings) {
+    public int delete(@NonNull Uri uri, String s, String[] strings) {
         File file = getFileForUri(uri);
         if (file != null && file.delete()) return 1;
         return 0;
     }
 
     @Override
-    public int update(Uri uri, ContentValues contentValues, String s, String[] strings) {
+    public int update(@NonNull Uri uri, ContentValues contentValues, String s, String[] strings) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
+    public ParcelFileDescriptor openFile(@NonNull Uri uri, @NonNull String mode) throws FileNotFoundException {
         File file = getFileForUri(uri);
         int fileMode = modeToMode(mode);
         return ParcelFileDescriptor.open(file, fileMode);

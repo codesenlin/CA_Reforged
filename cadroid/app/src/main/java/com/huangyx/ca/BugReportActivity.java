@@ -22,18 +22,19 @@ public class BugReportActivity extends Activity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
                     .setTitle("错误")
                     .setCancelable(false)
-                    .setMessage("您好，命令助手出现了一个错误。您可以将这个错误反馈给我们，来推动命令助手社区版的更新。您也可以选择忽略。" +
-                            "社区版作者联系方式：QQ-3353255023;Email-huangyxnycx@gmail.com\n\n" +
+                    .setMessage("您好，命令助手出现了一个错误。您可以将这个错误反馈给我们，来推动命令助手的更新。您也可以选择忽略。" +
+                            "作者联系方式：QQ-2687587184;Email-projectxero@163.com\n\n" +
                             "错误信息：\n" + em)
                     .setPositiveButton("复制并关闭", (dia, w) -> {
                         setClipText(em);
                         finish();
                     })
                     .setNegativeButton("忽略", (dia, w) -> finish());
-            if (epid != 0) {
+            final int epic = ex.getInt("pid", 0);
+            if (epic != 0) {
                 builder.setNeutralButton("立即停止", (dia, w) -> {
                     finish();
-                    android.os.Process.killProcess(epid);
+                    android.os.Process.killProcess(epic);
                     System.exit(0);
                 });
             }
