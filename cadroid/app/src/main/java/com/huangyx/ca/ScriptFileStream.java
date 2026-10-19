@@ -106,7 +106,8 @@ public class ScriptFileStream extends GZIPInputStream {
             byte[] sign = getFileBytes(signFile);
             if (sign.length < 4) throw new SignatureException("Signature is not available");
             int signVer = readIntLE(sign, 0);
-            if (signVer <= versionCode)
+            // 允许同版本号的热更新（重打同一版本时不用先抬 versionCode），只拒绝更旧的
+            if (signVer < versionCode)
                 throw new SignatureException("Version " + signVer + " is too low");
             if (!signature.verify(sign, 4, sign.length - 4)) {
                 throw new SignatureException("Signature not correct");
