@@ -7,6 +7,21 @@
 **更新说明**：虽然原项目目前暂停更新，但作者[ProjectXero](https://github.com/XeroAlpha)并**未宣布完全停止维护**。我们期待作者未来可能的更新，并鼓励社区参与，以确保项目的持续运行和改进。
 **关于本项目**：为了方便整理，将原本的3个项目合为一个文件方便管理
 
+> ### 本仓库（Fork）说明
+>
+> 这是 [huangyxHUTAO/CA_reforged](https://github.com/huangyxHUTAO/CA_reforged) 的 fork，
+> 由 [codesenlin](https://github.com/codesenlin) 维护。上游最近一次提交是 2026-08-24，
+> 更新节奏不稳定，所以本 fork 自己承担以下事情：
+>
+> - **保证可构建**：每次推送都会跑 `:app:assembleDebug`（见 `.github/workflows/build.yml`），
+>   PR 也必须先过 CI
+> - **跟进壳子**：定期把 [XeroAlpha/cadroid](https://github.com/XeroAlpha/cadroid) 的更新合并进来，
+>   当前对应 1.2.14（AGP 8.7.2 / Gradle 8.14.5 / compileSdk 33）
+> - **修上游没跟的问题**：同一版本号热更新、FileProvider authority 冲突、
+>   Android 11+ GameBridge 无法拉起等
+>
+> 上游修复欢迎提 PR，但合并可能不及时；急用的改动直接在本 fork 开分支更快。
+
 ## 原项目
 ### 命令助手
 - **链接**: [命令助手核心代码](https://github.com/XeroAlpha/ca)
