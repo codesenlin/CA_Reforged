@@ -91,12 +91,12 @@
             android:excludeFromRecents="true"
             android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|screenLayout" />
         <activity android:name=".ReturnDataActivity"
-            android:taskAffinity="com.huangyx.ca.ReturnDataTask"
+            android:taskAffinity="${applicationId}.ReturnDataTask"
             android:autoRemoveFromRecents="true"
             android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|screenLayout"
             android:theme="@style/AppTheme.Translucent" />
         <activity android:name=".ForegroundTaskActivity"
-            android:taskAffinity="com.huangyx.ca.ForegroundTask"
+            android:taskAffinity="${applicationId}.ForegroundTask"
             android:autoRemoveFromRecents="true"
             android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|screenLayout"
             android:theme="@style/AppTheme.Translucent" />
@@ -145,7 +145,7 @@
 		
 		<provider
             android:name="com.huangyx.ca.UnsafeFileProvider"
-            android:authorities="com.huangyx.ca.UnsafeFileProvider"
+            android:authorities="${applicationId}.UnsafeFileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
         </provider>

@@ -18,7 +18,8 @@ import java.util.Set;
 
 public class UnsafeFileProvider extends ContentProvider {
     private static final Set<String> mFiles = new HashSet<>();
-    private static final String authority = "com.huangyx.ca.UnsafeFileProvider";
+    // 跟随 applicationId，与 Manifest 里的 ${applicationId} 保持一致
+    private static final String authority = BuildConfig.APPLICATION_ID + ".UnsafeFileProvider";
 
     @Override
     public boolean onCreate() {
