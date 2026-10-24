@@ -22,6 +22,36 @@
 >
 > 上游修复欢迎提 PR，但合并可能不及时；急用的改动直接在本 fork 开分支更快。
 
+## 仓库结构
+
+本仓库现在只做「粘合」，代码本身以 **git 子模块** 的形式引入：
+
+```
+ca/        子模块 → codesenlin/CA        （命令助手核心脚本 + cabuildtools 构建工具）
+cadroid/   子模块 → codesenlin/cadroid   （Android 壳子）
+docs/      本仓库自己的文档
+```
+
+首次克隆：
+
+```bash
+git clone --recursive git@github.com:codesenlin/CA_Reforged.git
+# 已经克隆过的话：
+git submodule update --init --recursive
+```
+
+更新子模块到各自远端的最新提交：
+
+```bash
+git submodule update --remote --merge ca
+git submodule update --remote --merge cadroid
+git add ca cadroid
+git commit -m "chore: 更新子模块"
+```
+
+> `cabuildtools` 不再单独存放：它在 `ca/` 子模块内部（`ca/cabuildtools/`）。
+> 之前那份独立副本已经移除，避免两处代码不一致。
+
 ## 原项目
 ### 命令助手
 - **链接**: [命令助手核心代码](https://github.com/XeroAlpha/ca)

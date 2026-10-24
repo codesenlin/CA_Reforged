@@ -1,0 +1,6 @@
+[submodule "ca"]
+	url = git@github.com:codesenlin/CA.git
+	path = ca
+[submodule "cadroid"]
+	url = git@github.com:codesenlin/cadroid.git
+	path = cadroid
